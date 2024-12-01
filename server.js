@@ -33,6 +33,7 @@ fastify.post('/eventos', async (request, reply) => {
   } catch (err) {
     reply.status(500).send({ error: 'Erro ao criar evento' });
   }
+  console.log(request.body);
 });
 
 // PUT - Atualizar um evento

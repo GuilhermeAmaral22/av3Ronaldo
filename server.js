@@ -26,7 +26,7 @@ fastify.post('/eventos', async (request, reply) => {
   const { titulo, descricao, data_evento, hora_evento, local } = request.body;
   try {
     const [result] = await db.query(
-      'INSERT INTO Eventos (titulo, descricao, data_evento, hora_evento, local) VALUES (?, ?, ?, ?, ?)',
+      'INSERT INTO Eventos (id, titulo, descricao, data_evento, hora_evento, local) VALUES ( ?, ?, ?, ?, ?, ?)',
       [titulo, descricao, data_evento, hora_evento, local]
     );
     reply.status(201).send({ id: result.insertId });
@@ -42,7 +42,7 @@ fastify.put('/eventos/:id', async (request, reply) => {
   const { titulo, descricao, data_evento, hora_evento, local } = request.body;
   try {
     const [result] = await db.query(
-      'UPDATE Eventos SET titulo = ?, descricao = ?, data_evento = ?, hora_evento = ?, local = ? WHERE id = ?',
+      'UPDATE Eventos SET id = ?, titulo = ?, descricao = ?, data_evento = ?, hora_evento = ?, local = ? WHERE id = ?',
       [titulo, descricao, data_evento, hora_evento, local, id]
     );
     if (result.affectedRows === 0) {

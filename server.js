@@ -14,10 +14,10 @@ const db = mysql.createPool({
 // GET - Listar todos os eventos
 fastify.get('/eventos', async (request, reply) => {
   try {
-    const [rows] = await db.query('SELECT * FROM eventos');
+    const [rows] = await db.query('SELECT * FROM Eventos');
     reply.send(rows);
   } catch (err) {
-    reply.status(500).send({ error: 'Erro ao buscar eventos' });
+    reply.status(500).send({ error: 'Erro ao buscar Eventos' });
   }
 });
 
@@ -26,7 +26,7 @@ fastify.post('/eventos', async (request, reply) => {
   const { titulo, descricao, data_evento, hora_evento, local } = request.body;
   try {
     const [result] = await db.query(
-      'INSERT INTO eventos (titulo, descricao, data_evento, hora_evento, local) VALUES (?, ?, ?, ?, ?)',
+      'INSERT INTO Eventos (titulo, descricao, data_evento, hora_evento, local) VALUES (?, ?, ?, ?, ?)',
       [titulo, descricao, data_evento, hora_evento, local]
     );
     reply.status(201).send({ id: result.insertId });
@@ -41,7 +41,7 @@ fastify.put('/eventos/:id', async (request, reply) => {
   const { titulo, descricao, data_evento, hora_evento, local } = request.body;
   try {
     const [result] = await db.query(
-      'UPDATE eventos SET titulo = ?, descricao = ?, data_evento = ?, hora_evento = ?, local = ? WHERE id = ?',
+      'UPDATE Eventos SET titulo = ?, descricao = ?, data_evento = ?, hora_evento = ?, local = ? WHERE id = ?',
       [titulo, descricao, data_evento, hora_evento, local, id]
     );
     if (result.affectedRows === 0) {
@@ -58,7 +58,7 @@ fastify.put('/eventos/:id', async (request, reply) => {
 fastify.delete('/eventos/:id', async (request, reply) => {
   const { id } = request.params;
   try {
-    const [result] = await db.query('DELETE FROM eventos WHERE id = ?', [id]);
+    const [result] = await db.query('DELETE FROM Eventos WHERE id = ?', [id]);
     if (result.affectedRows === 0) {
       reply.status(404).send({ error: 'Evento não encontrado' });
     } else {

@@ -43,7 +43,7 @@ fastify.put('/eventos/:id', async (request, reply) => {
   try {
     const [result] = await db.query(
       'UPDATE Eventos SET id = ?, titulo = ?, descricao = ?, data_evento = ?, hora_evento = ?, local = ? WHERE id = ?',
-      [titulo, descricao, data_evento, hora_evento, local, id]
+      [id ,titulo, descricao, data_evento, hora_evento, local]
     );
     if (result.affectedRows === 0) {
       reply.status(404).send({ error: 'Evento não encontrado' });

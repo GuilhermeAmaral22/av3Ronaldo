@@ -1,4 +1,4 @@
-drequire('dotenv').config();
+require('dotenv').config();
 const fastify = require('fastify')({ logger: true });
 const mysql = require('mysql2/promise');
 
@@ -42,7 +42,7 @@ fastify.put('/eventos/:id', async (request, reply) => {
   const { titulo, descricao, data_evento, hora_evento, local } = request.body;
   try {
     const [result] = await db.query(
-      'UPDATE Eventos SET titulo = ?, descricao = ?, data_evento = ?, hora_evento = ?, local = ? WHERE id = ?',
+      'UPDATE Eventos SET id = ?, titulo = ?, descricao = ?, data_evento = ?, hora_evento = ?, local = ? WHERE id = ?',
       [id ,titulo, descricao, data_evento, hora_evento, local]
     );
     if (result.affectedRows === 0) {

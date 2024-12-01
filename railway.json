@@ -3,7 +3,7 @@
       "builder": "NIXPACKS",
       "nixpacks": {
         "phases": {
-          "install": "npm install",
+          "install": "npm install fastify fastify-mysql",
           "start": "npm start"
         }
       }

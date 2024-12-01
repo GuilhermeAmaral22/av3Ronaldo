@@ -1,11 +1,10 @@
-import fastify from 'fastify';
-import fastify from 'fastify-mysql';
+
 
 const fastify = require('fastify')({ logger: true });
 
 fastify.register(require('fastify-mysql'), {
   promise: true,
-  connectionString: 'mysql://root:guimax2211@localhost/bancoRonaldo'
+  connectionString: 'mysql://root:DnxDVFNeRldnmioBCWZLEkPUEPNgKXIP@junction.proxy.rlwy.net:48615/railway'
 });
 
 // Rotas

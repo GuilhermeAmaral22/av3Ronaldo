@@ -1,3 +1,6 @@
+import fastify from 'fastify';
+import fastify from 'fastify-mysql';
+
 const fastify = require('fastify')({ logger: true });
 
 fastify.register(require('fastify-mysql'), {

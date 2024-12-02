@@ -24,11 +24,11 @@ fastify.get('/eventos', async (request, reply) => {
 
 // POST - Criar um novo evento (sem vincular funcionário)
 fastify.post('/eventos', async (request, reply) => {
-  const { id, titulo, descricao, data_evento, hora_evento, local } = request.body;
+  const { id, titulo, descricao, data_evento, hora_evento, local, funcionarioID } = request.body;
   try {
     const [result] = await db.query(
-      'INSERT INTO Eventos (id, titulo, descricao, data_evento, hora_evento, local) VALUES (?, ?, ?, ?, ?, ?)',
-      [id, titulo, descricao, data_evento, hora_evento, local]
+      'INSERT INTO Eventos (id, titulo, descricao, data_evento, hora_evento, local, funcionarioID) VALUES (?, ?, ?, ?, ?, ?)',
+      [id, titulo, descricao, data_evento, hora_evento, local, funcionarioID]
     );
     reply.status(201).send({ id: result.insertId });
   } catch (err) {

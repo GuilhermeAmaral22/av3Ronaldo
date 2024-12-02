@@ -29,7 +29,7 @@ fastify.post('/eventos', async (request, reply) => {
   try {
     const [result] = await db.query(
       'INSERT INTO Eventos (id, titulo, descricao, data_evento, hora_evento, local, funcionarioID) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [id, titulo, descricao, data_evento, hora_evento, local, funcionarioID.randomId]
+      [id, titulo, descricao, data_evento, hora_evento, local, funcionarioID]
     );
     reply.status(201).send({ id: result.insertId });
   } catch (err) {

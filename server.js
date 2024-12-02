@@ -28,19 +28,15 @@ fastify.get('/eventos', async (request, reply) => {
 
 // POST - Criar um novo evento (sem vincular funcionário)
 fastify.post('/eventos', async (request, reply) => {
-  const { id, titulo, descricao, data_evento, hora_evento, local } = request.body;
+  const { id, titulo, descricao, data_evento, hora_evento, local, funcionarioID = null } = request.body; // Valor padrão: null
   try {
     const [result] = await db.query(
-      'INSERT INTO Eventos (id, titulo, descricao, data_evento, hora_evento, local) VALUES (?, ?, ?, ?, ?, ?)',
-      [id, titulo, descricao, data_evento, hora_evento, local]
+      'INSERT INTO Eventos (id, titulo, descricao, data_evento, hora_evento, local, funcionarioID) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [id, titulo, descricao, data_evento, hora_evento, local, funcionarioID]
     );
     reply.status(201).send({ id: result.insertId });
   } catch (err) {
-    console.error('Erro ao criar evento:', err); // Log detalhado no console
-    reply.status(500).send({
-      error: 'Erro ao criar evento',
-      details: err.message, // Inclui a mensagem de erro original
-    });
+    reply.status(500).send({ error: 'Erro ao criar evento', details: err.message });
   }
 });
 

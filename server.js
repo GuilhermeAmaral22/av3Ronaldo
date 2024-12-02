@@ -1,6 +1,7 @@
 require('dotenv').config();
 const fastify = require('fastify')({ logger: true });
 const mysql = require('mysql2/promise');
+const axios = require('axios');
 
 const db = mysql.createPool({
     host: process.env.DB_HOST,
@@ -23,11 +24,12 @@ fastify.get('/eventos', async (request, reply) => {
 
 // POST - Criar um novo evento
 fastify.post('/eventos', async (request, reply) => {
-  const {id, titulo, descricao, data_evento, hora_evento, local } = request.body;
+  const { id, titulo, descricao, data_evento, hora_evento, local } = request.body;
+  const funcionarioID = fetch;
   try {
     const [result] = await db.query(
-      'INSERT INTO Eventos (id, titulo, descricao, data_evento, hora_evento, local) VALUES ( ?, ?, ?, ?, ?, ?)',
-      [id, titulo, descricao, data_evento, hora_evento, local]
+      'INSERT INTO Eventos (id, titulo, descricao, data_evento, hora_evento, local, funcionarioID) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [id, titulo, descricao, data_evento, hora_evento, local, funcionarioID]
     );
     reply.status(201).send({ id: result.insertId });
   } catch (err) {
@@ -39,11 +41,11 @@ fastify.post('/eventos', async (request, reply) => {
 // PUT - Atualizar um evento
 fastify.put('/eventos/:id', async (request, reply) => {
   const { id } = request.params;
-  const { titulo, descricao, data_evento, hora_evento, local } = request.body;
+  const { titulo, descricao, data_evento, hora_evento, local, funcionarioID } = request.body;
   try {
     const [result] = await db.query(
-      'UPDATE Eventos SET titulo = ?, descricao = ?, data_evento = ?, hora_evento = ?, local = ? WHERE id = ?',
-      [titulo, descricao, data_evento, hora_evento, local, id]
+      'UPDATE Eventos SET titulo = ?, descricao = ?, data_evento = ?, hora_evento = ?, local = ?, funcionarioID = ? WHERE id = ?',
+      [titulo, descricao, data_evento, hora_evento, local, funcionarioID, id]
     );
     if (result.affectedRows === 0) {
       reply.status(404).send({ error: 'Evento não encontrado' });
@@ -70,6 +72,27 @@ fastify.delete('/eventos/:id', async (request, reply) => {
   }
 });
 
+const fetch = async (request, reply) => {
+  try {
+    // Faz a requisição GET para a API externa
+    const response = await axios.get('https://micronode-production.up.railway.app/api/funcionario');
+    
+    // Obtém os dados da resposta
+    const funcionarios = response.data;
+
+    // Extrai apenas os IDs de todos os funcionários
+    const ids = funcionarios.map(funcionario => funcionario.id);
+
+    // Seleciona um ID aleatório
+    const randomId = ids[Math.floor(Math.random() * ids.length)];
+
+    // Retorna o ID aleatório
+    reply.send({ randomId });
+  } catch (err) {
+    reply.status(500).send({ error: 'Erro ao buscar Funcionarios', details: err.message });
+  }
+};
+
 // Inicializar o Servidor
 const start = async () => {
   try {
@@ -82,5 +105,3 @@ const start = async () => {
 };
 
 start();
-
-// comentario para teste

@@ -11,9 +11,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "axios": "^1.7.8",
+    "dotenv": "^16.4.5",
     "fastify": "^5.1.0",
     "fastify-mysql": "^2.1.0",
-    "dotenv": "^16.4.5",
     "mysql2": "^3.11.5"
   }
 }

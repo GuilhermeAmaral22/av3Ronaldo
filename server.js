@@ -68,7 +68,7 @@ fastify.put('/eventos/:id', async (request, reply) => {
   try{
     const [result] = await db.query(
       'UPDATE Eventos SET titulo = ?, descricao = ?, data_evento = ?, hora_evento = ?, local = ? WHERE id = ?',
-      [titulo,descricao,data_evento,hora_evento,local.funcionarioID]
+      [titulo,descricao,data_evento,hora_evento,local,funcionarioID]
     )
   }catch(err){
     console.error('Erro ao atualizar o evento', err);

@@ -96,7 +96,6 @@ const fetchFuncionarioID = async () => {
     const response = await axios.get('https://micronode-production.up.railway.app/api/funcionario');
     const funcionarios = response.data;
     const ids = funcionarios.map(funcionario => funcionario.id);
-    return ids[Math.floor(Math.random() * ids.length)];
   } catch (err) {
     console.error('Erro ao buscar funcionários:', err); // Log detalhado no console
     throw new Error('Erro ao buscar funcionários: ' + err.message);

@@ -63,21 +63,29 @@ fastify.put('/eventos/:id/vincular-funcionario', async (request, reply) => {
 });
 
 fastify.put('/eventos/:id', async (request, reply) => {
-  const {titulo, descricao, data_evento, hora_evento, local, funcionarioID = null } = request.body
+  const { titulo, descricao, data_evento, hora_evento, local, funcionarioID = null } = request.body; // Note que `funcionarioID` está separado
   const { id } = request.params;
-  try{
+
+  try {
     const [result] = await db.query(
-      'UPDATE Eventos SET titulo = ?, descricao = ?, data_evento = ?, hora_evento = ?, local = ? WHERE id = ?',
-      [titulo,descricao,data_evento,hora_evento,local,funcionarioID]
-    )
-  }catch(err){
-    console.error('Erro ao atualizar o evento', err);
+      'UPDATE Eventos SET titulo = ?, descricao = ?, data_evento = ?, hora_evento = ?, local = ?, funcionarioID = ? WHERE id = ?',
+      [titulo, descricao, data_evento, hora_evento, local, funcionarioID, id] // Incluindo `funcionarioID` e `id` nos parâmetros corretamente
+    );
+
+    if (result.affectedRows === 0) {
+      reply.status(404).send({ error: 'Evento não encontrado' });
+    } else {
+      reply.send({ message: 'Evento atualizado com sucesso' });
+    }
+  } catch (err) {
+    console.error('Erro ao atualizar o evento:', err);
     reply.status(500).send({
       error: 'Erro ao atualizar o evento',
       details: err.message,
     });
   }
 });
+
 
 fastify.delete('/eventos/:id', async (request, reply) => {
   const { id } = request.params;

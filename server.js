@@ -1,4 +1,4 @@
-require('dotenv').config();
+import ('dotenv');
 const fastify = require('fastify')({ logger: true });
 const mysql = require('mysql2/promise');
 const axios = require('axios');
@@ -61,7 +61,6 @@ fastify.put('/eventos/:id/vincular-funcionario', async (request, reply) => {
 });
 
 // DELETE - Excluir um evento
-fastify.delete('/eventos/:id', async (request, reply) => {
   const { id } = request.params;
   try {
     const [result] = await db.query('DELETE FROM Eventos WHERE id = ?', [id]);
@@ -72,8 +71,7 @@ fastify.delete('/eventos/:id', async (request, reply) => {
     }
   } catch (err) {
     reply.status(500).send({ error: 'Erro ao excluir evento' });
-  }
-});
+  };
 
 // Função para buscar um funcionarioID aleatório da API externa
 const fetchFuncionarioID = async () => {

@@ -31,7 +31,7 @@ fastify.post('/eventos', async (request, reply) => {
   const { id, titulo, descricao, data_evento, hora_evento, local } = request.body;
   try {
     const [result] = await db.query(
-      'INSERT INTO Eventos (id, titulo, descricao, data_evento, hora_evento, local) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO Eventos (id, titulo, descricao, data_evento, hora_evento, local) VALUES (?, ?, ?, ?, ?, ?)',
       [id, titulo, descricao, data_evento, hora_evento, local]
     );
     reply.status(201).send({ id: result.insertId });
@@ -96,6 +96,7 @@ const fetchFuncionarioID = async () => {
     const response = await axios.get('https://micronode-production.up.railway.app/api/funcionario');
     const funcionarios = response.data;
     const ids = funcionarios.map(funcionario => funcionario.id);
+    return ids[Math.floor(Math.random() * ids.length)];
   } catch (err) {
     console.error('Erro ao buscar funcionários:', err); // Log detalhado no console
     throw new Error('Erro ao buscar funcionários: ' + err.message);

@@ -18,7 +18,11 @@ fastify.get('/eventos', async (request, reply) => {
     const [rows] = await db.query('SELECT * FROM Eventos');
     reply.send(rows);
   } catch (err) {
-    reply.status(500).send({ error: 'Erro ao buscar Eventos' });
+    console.error('Erro ao buscar eventos:', err); // Log detalhado no console
+    reply.status(500).send({
+      error: 'Erro ao buscar eventos',
+      details: err.message, // Inclui a mensagem de erro original
+    });
   }
 });
 
@@ -27,14 +31,17 @@ fastify.post('/eventos', async (request, reply) => {
   const { id, titulo, descricao, data_evento, hora_evento, local } = request.body;
   try {
     const [result] = await db.query(
-      'INSERT INTO Eventos (id, titulo, descricao, data_evento, hora_evento, local) VALUES (?, ?, ?, ?,?)',
+      'INSERT INTO Eventos (id, titulo, descricao, data_evento, hora_evento, local) VALUES (?, ?, ?, ?, ?, ?)',
       [id, titulo, descricao, data_evento, hora_evento, local]
     );
     reply.status(201).send({ id: result.insertId });
   } catch (err) {
-    reply.status(500).send({ error: 'Erro ao criar evento' });
+    console.error('Erro ao criar evento:', err); // Log detalhado no console
+    reply.status(500).send({
+      error: 'Erro ao criar evento',
+      details: err.message, // Inclui a mensagem de erro original
+    });
   }
-  console.log(request.body);
 });
 
 // PUT - Vincular um funcionário a um evento já existente
@@ -56,7 +63,11 @@ fastify.put('/eventos/:id/vincular-funcionario', async (request, reply) => {
       reply.send({ message: `Funcionário com ID ${funcionarioID} vinculado ao evento com sucesso.` });
     }
   } catch (err) {
-    reply.status(500).send({ error: 'Erro ao vincular funcionário ao evento', details: err.message });
+    console.error('Erro ao vincular funcionário ao evento:', err); // Log detalhado no console
+    reply.status(500).send({
+      error: 'Erro ao vincular funcionário ao evento',
+      details: err.message, // Inclui a mensagem de erro original
+    });
   }
 });
 
@@ -71,7 +82,11 @@ fastify.delete('/eventos/:id', async (request, reply) => {
       reply.send({ message: 'Evento excluído com sucesso' });
     }
   } catch (err) {
-    reply.status(500).send({ error: 'Erro ao excluir evento' });
+    console.error('Erro ao excluir evento:', err); // Log detalhado no console
+    reply.status(500).send({
+      error: 'Erro ao excluir evento',
+      details: err.message, // Inclui a mensagem de erro original
+    });
   }
 });
 
@@ -83,7 +98,8 @@ const fetchFuncionarioID = async () => {
     const ids = funcionarios.map(funcionario => funcionario.id);
     return ids[Math.floor(Math.random() * ids.length)];
   } catch (err) {
-    throw new Error('Erro ao buscar funcionarios: ' + err.message);
+    console.error('Erro ao buscar funcionários:', err); // Log detalhado no console
+    throw new Error('Erro ao buscar funcionários: ' + err.message);
   }
 };
 

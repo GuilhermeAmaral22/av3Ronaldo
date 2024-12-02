@@ -25,11 +25,11 @@ fastify.get('/eventos', async (request, reply) => {
 // POST - Criar um novo evento
 fastify.post('/eventos', async (request, reply) => {
   const { id, titulo, descricao, data_evento, hora_evento, local } = request.body;
-  const funcionarioID = fetch;
+  const funcionarioID = fetch();
   try {
     const [result] = await db.query(
       'INSERT INTO Eventos (id, titulo, descricao, data_evento, hora_evento, local, funcionarioID) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [id, titulo, descricao, data_evento, hora_evento, local, funcionarioID]
+      [id, titulo, descricao, data_evento, hora_evento, local, funcionarioID.randomId]
     );
     reply.status(201).send({ id: result.insertId });
   } catch (err) {

@@ -10,9 +10,8 @@ const db = mysql.createPool({
     database: process.env.DB_DATABASE,
 });
 
-// Rotas
 
-// GET - Listar todos os eventos
+// Rotas
 fastify.get('/eventos', async (request, reply) => {
   try {
     const [rows] = await db.query('SELECT * FROM Eventos');
@@ -26,13 +25,12 @@ fastify.get('/eventos', async (request, reply) => {
   }
 });
 
-// POST - Criar um novo evento (sem vincular funcionário)
 fastify.post('/eventos', async (request, reply) => {
-  const { id, titulo, descricao, data_evento, hora_evento, local, funcionarioID = null } = request.body; // Valor padrão: null
+  const {titulo, descricao, data_evento, hora_evento, local, funcionarioID = null } = request.body; // Valor padrão: null
   try {
     const [result] = await db.query(
-      'INSERT INTO Eventos (id, titulo, descricao, data_evento, hora_evento, local, funcionarioID) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [id, titulo, descricao, data_evento, hora_evento, local, funcionarioID]
+      'INSERT INTO Eventos (titulo, descricao, data_evento, hora_evento, local, funcionarioID) VALUES (?, ?, ?, ?, ?, ?)',
+      [titulo, descricao, data_evento, hora_evento, local, funcionarioID]
     );
     reply.status(201).send({ id: result.insertId });
   } catch (err) {
@@ -40,14 +38,11 @@ fastify.post('/eventos', async (request, reply) => {
   }
 });
 
-// PUT - Vincular um funcionário a um evento já existente
 fastify.put('/eventos/:id/vincular-funcionario', async (request, reply) => {
   const { id } = request.params;
   try {
-    // Busca um funcionário aleatório
     const funcionarioID = await fetchFuncionarioID();
 
-    // Atualiza o evento com o funcionarioID
     const [result] = await db.query(
       'UPDATE Eventos SET funcionarioID = ? WHERE id = ?',
       [funcionarioID, id]
@@ -67,7 +62,23 @@ fastify.put('/eventos/:id/vincular-funcionario', async (request, reply) => {
   }
 });
 
-// DELETE - Excluir um evento
+fastify.put('/eventos/:id', async (request, reply) => {
+  const {titulo, descricao, data_evento, hora_evento, local, funcionarioID = null } = request.body
+  const { id } = request.params;
+  try{
+    const [result] = await db.query(
+      'UPDATE Eventos SET titulo = ?, descricao = ?, data_evento = ?, hora_evento = ?, local = ? WHERE id = ?',
+      [titulo,descricao,data_evento,hora_evento,local.funcionarioID]
+    )
+  }catch(err){
+    console.error('Erro ao atualizar o evento', err);
+    reply.status(500).send({
+      error: 'Erro ao atualizar o evento',
+      details: err.message,
+    });
+  }
+});
+
 fastify.delete('/eventos/:id', async (request, reply) => {
   const { id } = request.params;
   try {
@@ -86,7 +97,6 @@ fastify.delete('/eventos/:id', async (request, reply) => {
   }
 });
 
-// Função para buscar um funcionarioID aleatório da API externa
 const fetchFuncionarioID = async () => {
   try {
     const response = await axios.get('https://micronode-production.up.railway.app/api/funcionario');
